@@ -175,7 +175,7 @@ class Habit:
          return habits
         
      def mark_streaks(habit_name):
-         # Get's habit id buy name
+         # Get habit id buy name
          conn = sqlite3.connect("mydb.db")
          cur = conn.cursor()
 
@@ -230,15 +230,16 @@ class Habit:
                 
          conn.commit()
          conn.close()
-            
+     # Adds Habit
      def add_habit(n, per):
+         # n would be name and per period
          conn = sqlite3.connect("mydb.db")
          cur = conn.cursor()
     
     # Fetching the number of entries to determine the new habit ID
          cur.execute("SELECT COUNT(*) FROM habits")
          num_entries = cur.fetchone()[0] + 1
-
+         # Allows us to add a new id
     # Creating a tuple for the new habit
          new_habit = (num_entries, n, per, datetime.now())
          cur.execute("SELECT * FROM habits WHERE name = ?", (n,))
@@ -254,12 +255,12 @@ class Habit:
          cur.close()
          conn.close()
 
-    
+     # Removes Habit
      def remove_habit(name):
          conn = sqlite3.connect("mydb.db")
          cur = conn.cursor()
     
-    # Check if the habit exists
+    # Selct if the habit exists
          cur.execute("SELECT * FROM habits WHERE name = ?", (name,))
          existing_habit = cur.fetchone()
     
@@ -268,7 +269,7 @@ class Habit:
              cur.execute("DELETE FROM habits WHERE name = ?", (name,))
              print(f"Habit '{name}' removed successfully.")
         
-        # Update IDs after deletion
+        # Fixes Id after deletion so it does not skip a number
              cur.execute("UPDATE habits SET id = id - 1 WHERE id > ?", (existing_habit[0],))
          else:
              print(f"Habit '{name}' does not exist in the database.")
@@ -280,6 +281,7 @@ class Habit:
          cur.close()
          conn.close()
 def get_habit_id_by_name(name):
+    # Gets the habit id based on name
     conn = sqlite3.connect("mydb.db")
     cur = conn.cursor()
     cur.execute("SELECT id FROM habits WHERE name = ?", (name,))
@@ -289,7 +291,7 @@ def get_habit_id_by_name(name):
     return habit_id[0] if habit_id else None
     
 
-#For when we use the CLI, but as we want to see the input we will use normal input for now.
+#For when we use the CLI, as a back up CLI. Basically does the same as what is in the main function.
 #@click.command()
 #@click.option('--add', is_flag=True, help='Add a new habit')
 #@click.option('--remove', is_flag=True, help='Remove an existing habit')
