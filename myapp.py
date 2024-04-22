@@ -57,10 +57,11 @@ habits = [
 for habit in habits:
     name = habit[1]
     cur.execute("SELECT * FROM habits WHERE name = ?", (name,))
+    # Checks if name exists in database
     existing_habit = cur.fetchone()
     if not existing_habit:
         cur.execute("INSERT INTO habits (id, name, period, created_at) VALUES (?, ?, ?, ?)", habit)
-
+        # Inserts new data into database
 # Query the habits table
 cur.execute("SELECT * FROM habits")
 
@@ -78,8 +79,9 @@ conn.close()
 # Define habit class
 class Habit:
      def __init__(self, id, name, period, created_at):
-        self.id = id
-        self.name = name
+        # Initializing the habit object
+        self.id = id # Assign habit ID
+        self.name = name # Assign habit name
         self.period = period
         self.created_at = created_at
      # Marks task as complete at current time
@@ -88,32 +90,32 @@ class Habit:
      # Marks as incomplete
      def task_incomplete(self):
         if self.completed_at:
-            self.completed_at.pop()
+            self.completed_at.pop() # pop removes
      
      def is_streak_continuing(self):
          # Is streak for Habit continuing
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
         if self.period == 'daily':
-            streak_check_query = "SELECT COUNT(*) FROM streaks WHERE habit_id = ? AND date >= ?"
+            streak_check_query = "SELECT COUNT(*) FROM streaks WHERE habit_id = ? AND date >= ?" # Counts number of streaks for the period
             period_days = 1
         elif self.period == 'weekly':
-            streak_check_query = "SELECT COUNT(*) FROM streaks WHERE habit_id = ? AND date >= ?"
+            streak_check_query = "SELECT COUNT(*) FROM streaks WHERE habit_id = ? AND date >= ?" # Counts number of streaks for the period
             period_days = 7
 
         habit_id = self.id
-        streak_check_result = cur.execute(streak_check_query, (habit_id, datetime.now() - timedelta(days=period_days))).fetchone()
-        streak_count = streak_check_result[0] if streak_check_result else 0
+        streak_check_result = cur.execute(streak_check_query, (habit_id, datetime.now() - timedelta(days=period_days))).fetchone() # Checks query with habit id and date
+        streak_count = streak_check_result[0] if streak_check_result else 0 # Streak result of query
         conn.close()
         return streak_count
      # Check streaks for habits
      def check_streaks(habits):
         for habit_tuple in habits:
-            name = habit_tuple[1]
-            period = habit_tuple[2]
+            name = habit_tuple[1] # Habit name from tuple
+            period = habit_tuple[2] # Habit period from tuple
             habit = Habit.get_habit_by_name(name)
             streak_count = habit.is_streak_continuing()
-            print(f"{habit.name}: Streak count: {streak_count}")
+            print(f"{habit.name}: Streak count: {streak_count}") # Prints habit name and streak count
      # Get's Habit entry by name
      def get_habit_by_name(name):
         conn = sqlite3.connect("mydb.db")
@@ -130,15 +132,15 @@ class Habit:
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
         if self.period == 'daily':
-            streak_check_query = "SELECT COUNT(*) FROM streaks WHERE habit_id = ? AND date >= ?"
+            streak_check_query = "SELECT COUNT(*) FROM streaks WHERE habit_id = ? AND date >= ?" # Counts streaks for the habits
             period_days = 1
         elif self.period == 'weekly':
             streak_check_query = "SELECT COUNT(*) FROM streaks WHERE habit_id = ? AND date >= ?"
             period_days = 7
             
         habit_id = self.id
-        streak_check_result = cur.execute(streak_check_query, (habit_id, datetime.now() - timedelta(days=period_days))).fetchone()
-        streak_count = streak_check_result[0] if streak_check_result else 0
+        streak_check_result = cur.execute(streak_check_query, (habit_id, datetime.now() - timedelta(days=period_days))).fetchone() 
+        streak_count = streak_check_result[0] if streak_check_result else 0 # Streak count for query result
         conn.close()
         return streak_count
 
@@ -187,8 +189,8 @@ class Habit:
              return
 
     # Get the period of the habit from the habits table
-         cur.execute("SELECT period FROM habits WHERE id = ?", (habit_id,))
-         period = cur.fetchone()[0]
+         cur.execute("SELECT period FROM habits WHERE id = ?", (habit_id,)) # Fetches period of habits
+         period = cur.fetchone()[0] # Fetches results from query
 
     # Check if the habit was completed within the required period
     # Update streaks table with the streak count for testing
@@ -302,6 +304,7 @@ def get_habit_id_by_name(name):
 #@click.option('--exit', is_flag=True, help='Exit the program')
 #def main(add, remove, list, streaks, complete, longeststreak):
 #We will put all code related to cli as comments for now as so far this is just for testing and no clickable buttons have been added.
+# In the main everything does pretty much it it says or what it's name is
 def main():
     print('If you did not know, a habit takes on average 66 days to establish. However to break a habit research suggests takes between 18 and 254 days.')
     action = input('What do you want to do with habits? Add, Remove, list, streaks, mark as complete or exit. ')
