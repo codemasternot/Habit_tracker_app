@@ -26,6 +26,7 @@ cur.execute('''
         period TEXT NOT NULL,
         created_at DATETIME NOT NULL
     )''')
+# Create the streaks table if it doesn't exist
 cur.execute('''
     CREATE TABLE IF NOT EXISTS streaks (
     id INTEGER PRIMARY KEY,
@@ -38,6 +39,7 @@ cur.execute('''
 cur.execute(''' 
     PRAGMA table_info(streaks);
 ''')
+# Adds a completed column to the streaks table
 if 'completed' not in [col[1] for col in cur.fetchall()]:
     cur.execute('''
         ALTER TABLE streaks ADD COLUMN completed INTEGER NOT NULL DEFAULT 0;
