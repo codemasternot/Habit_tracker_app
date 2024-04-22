@@ -44,7 +44,7 @@ if 'completed' not in [col[1] for col in cur.fetchall()]:
     cur.execute('''
         ALTER TABLE streaks ADD COLUMN completed INTEGER NOT NULL DEFAULT 0;
     ''')
-# Define the habits to insert
+# Dummy data to insert into habits
 habits = [
     (1, 'Go to gym', 'daily', datetime.now()),
     (2, 'Brush teeth', 'daily', datetime.now()),
@@ -64,7 +64,7 @@ for habit in habits:
 # Query the habits table
 cur.execute("SELECT * FROM habits")
 
-# Fetch all rows from the result set
+# Fetch all rows
 rows = cur.fetchall()
 
 # Print the rows for testing
@@ -75,21 +75,23 @@ rows = cur.fetchall()
 conn.commit()
 cur.close()
 conn.close()
+# Define habit class
 class Habit:
      def __init__(self, id, name, period, created_at):
         self.id = id
         self.name = name
         self.period = period
         self.created_at = created_at
-     
+     # Marks task as complete at current time
      def complete_task(self):
         self.completed_at = datetime.now()
-         
+     # Marks as incomplete
      def task_incomplete(self):
         if self.completed_at:
             self.completed_at.pop()
      
      def is_streak_continuing(self):
+         # Is streak for Habit continuing
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
         if self.period == 'daily':
@@ -104,7 +106,7 @@ class Habit:
         streak_count = streak_check_result[0] if streak_check_result else 0
         conn.close()
         return streak_count
-    
+     # Check streaks for habits
      def check_streaks(habits):
         for habit_tuple in habits:
             name = habit_tuple[1]
@@ -112,7 +114,7 @@ class Habit:
             habit = Habit.get_habit_by_name(name)
             streak_count = habit.is_streak_continuing()
             print(f"{habit.name}: Streak count: {streak_count}")
-            
+     # Get's Habit entry by name
      def get_habit_by_name(name):
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
@@ -123,6 +125,7 @@ class Habit:
         if habit:
             return Habit(habit[0], habit[1], habit[2], habit[3])  # Include id and created_at when creating Habit object
         return None
+     # Get's streak count for specific habit
      def get_streak_count(self):
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
@@ -139,7 +142,7 @@ class Habit:
         conn.close()
         return streak_count
 
-    
+     # Get's longest streak of all habits
      def get_longest_streak(habit_name):
         conn = sqlite3.connect("mydb.db")
         cur = conn.cursor()
@@ -161,6 +164,7 @@ class Habit:
             return streak_count
         else:
             return None
+     # Fetches all the habits
      def fetch_all_habits():
          conn = sqlite3.connect("mydb.db")
          cur = conn.cursor()
@@ -171,6 +175,7 @@ class Habit:
          return habits
         
      def mark_streaks(habit_name):
+         # Get's habit id buy name
          conn = sqlite3.connect("mydb.db")
          cur = conn.cursor()
 
