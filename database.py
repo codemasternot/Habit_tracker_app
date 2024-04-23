@@ -32,12 +32,13 @@ def create_db():
     ''')
     cur.execute(''' 
         PRAGMA table_info(streaks);
-    ''')
+    ''') 
+    # Adds a completed column to the streaks table
     if 'completed' not in [col[1] for col in cur.fetchall()]:
         cur.execute('''
             ALTER TABLE streaks ADD COLUMN completed INTEGER NOT NULL DEFAULT 0;
         ''')
-    # Define the habits to insert
+    # Dummy data to insert into habits
     habits = [
         (1, 'Go to gym', 'daily', datetime.now()),
         (2, 'Brush teeth', 'daily', datetime.now()),
@@ -49,11 +50,12 @@ def create_db():
     # Insert the habits into the table if they don't already exist
     for habit in habits:
         name = habit[1]
-        cur.execute("SELECT * FROM habits WHERE name = ?", (name,))
+        cur.execute("SELECT * FROM habits WHERE name = ?", (name,)) 
+        # Checks if name exists in database
         existing_habit = cur.fetchone()
         if not existing_habit:
             cur.execute("INSERT INTO habits (id, name, period, created_at) VALUES (?, ?, ?, ?)", habit)
-
+    # Inserts new data into database
     # Query the habits table
     cur.execute("SELECT * FROM habits")
 
