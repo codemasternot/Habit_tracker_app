@@ -71,6 +71,19 @@ def main():
 
     elif action == 'add_days': 
                 Habit.test_days()
+#For testing
+#habit_id = 1  # Change this to the habit ID you want to check
+#conn = sqlite3.connect("mydb.db")
+#cur = conn.cursor()
+
+# Execute the query to count the number of streak entries for the given habit_id
+#cur.execute("SELECT COUNT(*) FROM streaks WHERE habit_id = ?", (habit_id,))
+#count = cur.fetchone()[0]
+
+# Print the total streak entries
+#print(f"Total streak entries for habit_id {habit_id}: {count}")
+#cur.close()
+#conn.close()
 
 if __name__ == "__main__":
     main()
