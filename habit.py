@@ -199,6 +199,49 @@ def get_habit_id_by_name(name):
     cur.close()
     conn.close()
     return habit_id[0] if habit_id else None
+
+def test_days():
+         conn = sqlite3.connect("mydb.db")
+         cur = conn.cursor()
+         start_date = datetime.now() - timedelta(days=30)
+         end_date = datetime.now()
+         cur.execute("SELECT id, period FROM habits")
+         habits = cur.fetchall()
+         if not habits:
+            print("No habits found in the database.")
+            return
+        
+         for habit in habits:
+            habit_id, period = habit
+            print(f"Period: {period}")
+            print(f"Start date: {start_date}")
+            print(f"End date: {end_date}")
+            
+            date = start_date
+            while date <= end_date:
+                if period == 'daily':
+                    print(f"Inserting data for date: {date.date()}") #For debugging
+                    cur.execute("SELECT MAX(completed) FROM streaks WHERE habit_id = ? LIMIT 1", (habit_id,))
+                    result = cur.fetchone()
+                    streak_count = result[0] if result[0] is not None else 0
+                    cur.execute("INSERT INTO streaks (habit_id, date, completed, period) VALUES (?, ?, ?, ?)", 
+                                (habit_id, date.date(), streak_count + 1, period))
+                    date += timedelta(days=1)
+                elif period == 'weekly':
+                    #if date.weekday() == 0:
+                    print(f"Inserting weekly data for date: {date.date()}")
+                    cur.execute("SELECT MAX(completed) FROM streaks WHERE habit_id = ? LIMIT 1", (habit_id,))
+                    result = cur.fetchone()
+                    streak_count = result[0] if result[0] is not None else 0
+                    cur.execute("INSERT INTO streaks (habit_id, date, completed, period) VALUES (?, ?, ?, ?)", 
+                                (habit_id, date.date(), streak_count + 1, period))
+                    date += timedelta(days=7)
+                
+            
+         conn.commit()
+         print("Data inserted successfully.")
+         cur.close()
+         conn.close()
 # In[ ]:
 
 
