@@ -69,5 +69,8 @@ def main():
     elif action == 'exit':
         print('You have chosen to exit. ')
 
+    elif action == 'add_days': 
+                Habit.test_days()
+
 if __name__ == "__main__":
     main()
