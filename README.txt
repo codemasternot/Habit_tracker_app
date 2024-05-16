@@ -33,8 +33,6 @@ Dependencies
 Author
 - Stephen Moorcroft
 
-MIT License
-
 Copyright (c) 2024 Stephen Moorcroft
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
