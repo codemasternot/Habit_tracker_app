@@ -200,7 +200,7 @@ def get_habit_id_by_name(name):
     conn.close()
     return habit_id[0] if habit_id else None
 
-def test_days():
+def test_days(): #For previous 30 days of dummy data
          conn = sqlite3.connect("mydb.db")
          cur = conn.cursor()
          start_date = datetime.now() - timedelta(days=30)
